@@ -22,7 +22,7 @@ const db = {
 
 require('./initRelationships')(db);
 
-sequelize.sync({ force: true })
+sequelize.sync({ force: false })
     .then(() => {
         console.log('Connection successful');
     })
