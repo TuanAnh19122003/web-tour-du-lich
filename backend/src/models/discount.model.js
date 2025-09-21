@@ -1,54 +1,34 @@
 const sequelize = require('../config/database');
 const { DataTypes } = require('sequelize');
-const slugify = require('slugify');
 
 const Discount = sequelize.define('Discount', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+    id: { 
+        type: DataTypes.INTEGER, 
+        autoIncrement: true, 
+        primaryKey: true 
     },
-    code: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+    name: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
     },
-    slug: {
-        type: DataTypes.STRING,
-        unique: true
+    description: { 
+        type: DataTypes.TEXT 
     },
-    description: {
-        type: DataTypes.TEXT
+    percentage: { 
+        type: DataTypes.DECIMAL(5, 2), 
+        allowNull: false 
     },
-    discountType: {
-        type: DataTypes.ENUM('Percentage', 'Fixed'),
-        defaultValue: 'Percentage'
+    start_date: { 
+        type: DataTypes.DATEONLY, 
+        allowNull: false 
     },
-    amount: {
-        type: DataTypes.DECIMAL(12, 2),
-        allowNull: false
-    },
-    startDate: {
-        type: DataTypes.DATE
-    },
-    endDate: {
-        type: DataTypes.DATE
-    },
-    maxUsage: {
-        type: DataTypes.INTEGER,
-        defaultValue: 1
+    end_date: { 
+        type: DataTypes.DATEONLY, 
+        allowNull: false 
     }
 }, {
-    tableName: 'discounts',
     timestamps: true,
-    hooks: {
-        beforeCreate: (discount) => {
-            if (discount.code) discount.slug = slugify(discount.code, { lower: true, strict: true });
-        },
-        beforeUpdate: (discount) => {
-            if (discount.code) discount.slug = slugify(discount.code, { lower: true, strict: true });
-        }
-    }
+    tableName: 'discounts'
 });
 
-module.exports = Discount
+module.exports = Discount;
