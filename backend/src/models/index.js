@@ -2,21 +2,21 @@ const sequelize = require('../config/database');
 const Role = require('./role.model')
 const User = require('./user.model');
 const Booking = require('./booking.model');
-const BookingDetail = require('./bookingDetail.model');
+const BookingItem = require('./bookingItem.model');
 const Discount = require('./discount.model');
-const Payment = require('./payment.model');
 const Review = require('./review.model');
-const Tour = require('./tour.model')
+const Tour = require('./tour.model');
+const Contact = require('./contact.model');
 
 const db = {
     Role,
     User,
     Booking,
-    BookingDetail,
+    BookingItem,
     Discount,
-    Payment,
     Review,
     Tour,
+    Contact,
     sequelize
 }
 

@@ -1,47 +1,67 @@
+// models/Tour.js
 const sequelize = require('../config/database');
 const { DataTypes } = require('sequelize');
 const slugify = require('slugify');
 
 const Tour = sequelize.define('Tour', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+    id: { 
+        type: DataTypes.INTEGER, 
+        autoIncrement: true, 
+        primaryKey: true 
     },
-    code: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+    code: { 
+        type: DataTypes.STRING, 
+        allowNull: false, 
+        unique: true 
     },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false
+    name: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
     },
-    slug: {
-        type: DataTypes.STRING,
-        unique: true
+    slug: { 
+        type: DataTypes.STRING, 
+        unique: true 
     },
-    description: {
-        type: DataTypes.TEXT
+    description: { type: DataTypes.TEXT },
+    image: { type: DataTypes.STRING },
+    price: { 
+        type: DataTypes.DECIMAL(10, 2), 
+        allowNull: false 
     },
-    location: {
-        type: DataTypes.STRING
+    start_date: { 
+        type: DataTypes.DATEONLY, 
+        allowNull: false 
     },
-    startDate: {
-        type: DataTypes.DATE
+    end_date: { 
+        type: DataTypes.DATEONLY, 
+        allowNull: false 
     },
-    endDate: {
-        type: DataTypes.DATE
+    location: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
     },
-    maxPeople: {
-        type: DataTypes.INTEGER
+    max_people: { 
+        type: DataTypes.INTEGER, 
+        allowNull: false 
     },
-    price: {
-        type: DataTypes.DECIMAL(12, 2)
+    available_people: { 
+        type: DataTypes.INTEGER, 
+        allowNull: false 
+    },
+    is_active: { 
+        type: DataTypes.BOOLEAN, 
+        defaultValue: true 
+    },
+    is_featured: { 
+        type: DataTypes.BOOLEAN, 
+        defaultValue: false 
+    },
+    discountId: { 
+        type: DataTypes.INTEGER 
     }
 }, {
-    tableName: 'tours',
     timestamps: true,
+    tableName: 'tours',
     hooks: {
         beforeCreate: (tour) => {
             if (tour.name) tour.slug = slugify(tour.name, { lower: true, strict: true });
