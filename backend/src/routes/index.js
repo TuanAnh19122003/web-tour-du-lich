@@ -6,11 +6,13 @@ const userRouter = require('./user.routes');
 const contactRouter = require('./contact.routes');
 const discountRouter = require('./discount.routes');
 const tourRouter = require('./tour.routes');
+const reviewRouter = require('./review.routes');
 
 router.use('/roles', roleRouter);
 router.use('/users', userRouter);
 router.use('/contacts', contactRouter);
 router.use('/discounts', discountRouter);
 router.use('/tours', tourRouter);
+router.use('/reviews', reviewRouter)
 
 module.exports = router;
