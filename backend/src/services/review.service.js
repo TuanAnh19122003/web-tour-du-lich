@@ -14,6 +14,18 @@ class ReviewService {
 
         const queryOptions = {
             where: whereClause,
+            include: [
+                {
+                    model: require('../models/user.model'),
+                    as: 'user',
+                    attributes: ['id', 'lastname', 'firstname']
+                },
+                {
+                    model: require('../models/tour.model'),
+                    as: 'tour',
+                    attributes: ['id', 'name', 'code', 'price']
+                }
+            ],
             order: [['createdAt', 'ASC']]
         };
 
@@ -25,6 +37,7 @@ class ReviewService {
         const reviews = await Review.findAndCountAll(queryOptions);
         return reviews;
     }
+
 
     static async create(data) {
         const review = await Review.create(data);
