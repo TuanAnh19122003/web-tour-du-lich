@@ -5,10 +5,12 @@ const roleRouter = require('./role.routes');
 const userRouter = require('./user.routes');
 const contactRouter = require('./contact.routes');
 const discountRouter = require('./discount.routes');
+const tourRouter = require('./tour.routes');
 
 router.use('/roles', roleRouter);
 router.use('/users', userRouter);
 router.use('/contacts', contactRouter);
 router.use('/discounts', discountRouter);
+router.use('/tours', tourRouter);
 
 module.exports = router;
