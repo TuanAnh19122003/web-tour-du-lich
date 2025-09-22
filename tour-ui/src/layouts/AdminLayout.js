@@ -10,6 +10,8 @@ import {
     LogoutOutlined,
     PhoneOutlined,
     TagsOutlined,
+    TeamOutlined,
+    IdcardOutlined,
 } from "@ant-design/icons";
 import logo from "../assets/logo.png";
 
@@ -59,11 +61,19 @@ const AdminLayout = () => {
         },
         {
             key: "sub-user-management",
-            icon: <UserOutlined />,
+            icon: <TeamOutlined />,
             label: "Người dùng",
             children: [
-                { key: "users", label: <Link to="/admin/users">Danh sách</Link> },
-                { key: "roles", label: <Link to="/admin/roles">Vai trò</Link> },
+                {
+                    key: "users",
+                    icon: <UserOutlined />,
+                    label: <Link to="/admin/users">Danh sách</Link>,
+                },
+                {
+                    key: "roles",
+                    icon: <IdcardOutlined />,
+                    label: <Link to="/admin/roles">Vai trò</Link>,
+                },
             ],
         },
         {
@@ -71,9 +81,21 @@ const AdminLayout = () => {
             icon: <CompassOutlined />,
             label: "Tour du lịch",
             children: [
-                { key: "categories", label: <Link to="/admin/categories">Loại tour</Link> },
-                { key: "tours", label: <Link to="/admin/tours">Danh sách tour</Link> },
-                { key: "discounts", icon: <TagsOutlined />, label: <Link to="/admin/discounts">Khuyến mãi</Link> },
+                {
+                    key: "tours",
+                    icon: <CompassOutlined />,
+                    label: <Link to="/admin/tours">Danh sách tour</Link>,
+                },
+                {
+                    key: "discounts",
+                    icon: <TagsOutlined />,
+                    label: <Link to="/admin/discounts">Khuyến mãi</Link>,
+                },
+                {
+                    key: "reviews",
+                    icon: <FileTextOutlined />,
+                    label: <Link to="/admin/reviews">Đánh giá</Link>,
+                },
             ],
         },
         {
@@ -94,7 +116,7 @@ const AdminLayout = () => {
             { key: "settings", icon: <SettingOutlined />, label: "Cài đặt" },
             {
                 key: "user",
-                icon: <SettingOutlined />,
+                icon: <CompassOutlined />,
                 label: "Trang người dùng",
                 onClick: () => navigate("/"),
             },
