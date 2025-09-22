@@ -9,7 +9,9 @@ import UserLayout from "./layouts/UserLayout";
 import AuthLayout from './layouts/AuthLayout';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+
 import RolePage from './pages/admin/role/RolePage';
+import UserPage from './pages/admin/user/UserPage';
 
 const App = () => {
   return (
@@ -30,6 +32,7 @@ const App = () => {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="/admin/roles" element={<RolePage />} />
+          <Route path="/admin/users" element={<UserPage />} />
         </Route>
       </Routes>
 
