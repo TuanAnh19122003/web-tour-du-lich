@@ -13,6 +13,7 @@ import RegisterPage from './pages/auth/RegisterPage';
 import RolePage from './pages/admin/role/RolePage';
 import UserPage from './pages/admin/user/UserPage';
 import DiscountPage from './pages/admin/discount/DiscountPage';
+import ContactPage from './pages/admin/contact/ContactPage';
 
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/admin/roles" element={<RolePage />} />
           <Route path="/admin/users" element={<UserPage />} />
           <Route path="/admin/discounts" element={<DiscountPage />} />
+          <Route path="/admin/contacts" element={<ContactPage />} />
         </Route>
       </Routes>
 
