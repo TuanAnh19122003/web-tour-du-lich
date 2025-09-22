@@ -18,7 +18,7 @@ class ReviewService {
                 {
                     model: require('../models/user.model'),
                     as: 'user',
-                    attributes: ['id', 'lastname', 'firstname']
+                    attributes: ['id', 'lastname', 'firstname', 'email']
                 },
                 {
                     model: require('../models/tour.model'),
