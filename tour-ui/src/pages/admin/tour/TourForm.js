@@ -1,23 +1,49 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Input, InputNumber, DatePicker, Switch, Select, Upload, Button, Space } from "antd";
 import { UploadOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import moment from "moment";
 
 const { TextArea } = Input;
 
-const TourForm = ({ initialValues, onSubmit, onCancel, discounts }) => {
+const TourForm = ({ initialValues, onSubmit, onCancel, discounts, API_URL }) => {
     const [form] = Form.useForm();
 
+    useEffect(() => {
+        if (initialValues) {
+            const imageFileList = initialValues.image
+                ? [
+                    {
+                        uid: "-1",
+                        name: initialValues.image.split("/").pop(),
+                        status: "done",
+                        url: `${API_URL}/${initialValues.image}`,
+                    },
+                ]
+                : [];
+
+            form.setFieldsValue({
+                ...initialValues,
+                image: imageFileList,
+                start_date: initialValues.start_date ? moment(initialValues.start_date) : null,
+                end_date: initialValues.end_date ? moment(initialValues.end_date) : null,
+            });
+        } else {
+            form.resetFields();
+        }
+    }, [initialValues, form, API_URL]);
+
     const handleFinish = (values) => {
+        // Convert image to File object nếu có
+        if (values.image && values.image.length > 0) {
+            values.image = values.image[0].originFileObj || values.image[0].url;
+        } else {
+            values.image = null;
+        }
         onSubmit(values);
     };
 
     return (
-        <Form
-            form={form}
-            layout="vertical"
-            initialValues={initialValues || { is_active: true, is_featured: false }}
-            onFinish={handleFinish}
-        >
+        <Form form={form} layout="vertical" initialValues={{ is_active: true, is_featured: false }} onFinish={handleFinish}>
             <Form.Item name="code" label="Mã tour" rules={[{ required: true, message: "Vui lòng nhập mã tour!" }]}>
                 <Input />
             </Form.Item>
@@ -26,16 +52,12 @@ const TourForm = ({ initialValues, onSubmit, onCancel, discounts }) => {
                 <Input />
             </Form.Item>
 
-            <Form.Item name="slug" label="Slug">
-                <Input />
-            </Form.Item>
-
             <Form.Item name="description" label="Mô tả">
                 <TextArea rows={4} />
             </Form.Item>
 
             <Form.Item name="image" label="Ảnh tour" valuePropName="fileList" getValueFromEvent={(e) => e?.fileList}>
-                <Upload beforeUpload={() => false} listType="picture" maxCount={1}>
+                <Upload name="image" listType="picture" beforeUpload={() => false} maxCount={1}>
                     <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
                 </Upload>
             </Form.Item>

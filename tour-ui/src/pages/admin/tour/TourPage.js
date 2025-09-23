@@ -62,12 +62,36 @@ const TourPage = () => {
 
     const handleSubmit = async (tour) => {
         try {
+            const formData = new FormData();
+            formData.append("code", tour.code);
+            formData.append("name", tour.name);
+            formData.append("description", tour.description || "");
+            formData.append("price", tour.price);
+            formData.append("location", tour.location);
+            formData.append("max_people", tour.max_people);
+            formData.append("available_people", tour.available_people);
+            formData.append("is_active", tour.is_active ? 1 : 0);
+            formData.append("is_featured", tour.is_featured ? 1 : 0);
+            if (tour.discountId) formData.append("discountId", tour.discountId);
+
+            if (tour.start_date) formData.append("start_date", tour.start_date.format("YYYY-MM-DD"));
+            if (tour.end_date) formData.append("end_date", tour.end_date.format("YYYY-MM-DD"));
+
+            if (tour.image instanceof File) {
+                formData.append("image", tour.image);
+            }
+
             let res;
             if (editing) {
-                res = await axios.put(`${API_URL}/tours/${editing.id}`, tour);
+                res = await axios.put(`${API_URL}/tours/${editing.id}`, formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                });
             } else {
-                res = await axios.post(`${API_URL}/tours`, tour);
+                res = await axios.post(`${API_URL}/tours`, formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                });
             }
+
             if (res.data.success) {
                 toast.success(res.data.message);
                 fetchTours(pagination.current, pagination.pageSize);
@@ -75,10 +99,12 @@ const TourPage = () => {
             } else {
                 toast.error(res.data.message || "Thao tác thất bại");
             }
-        } catch {
+        } catch (err) {
+            console.error(err);
             toast.error("Thao tác thất bại");
         }
     };
+
 
     return (
         <div>
@@ -103,8 +129,6 @@ const TourPage = () => {
                         onChange={(checked) => setViewMode(checked ? "card" : "list")}
                         style={{
                             marginTop: 10,
-                            // backgroundColor: viewMode === "card" ? "#52c41a" : "#d9d9d9",
-                            // borderRadius: 20,
                         }}
                     />
 
@@ -133,7 +157,7 @@ const TourPage = () => {
                                 <Card
                                     key={tour.id}
                                     size="small"
-                                    cover={tour.image ? <img src={`${API_URL}/${tour.image}`} alt={tour.name} /> : null}
+                                    cover={tour.image ? <img src={`http://localhost:5000/${tour.image}`} alt={tour.name} /> : null}
                                     actions={[
                                         <Tooltip title="Chi tiết" key="view"><EyeOutlined onClick={() => setViewing(tour)} /></Tooltip>,
                                         <Tooltip title="Sửa" key="edit"><EditOutlined onClick={() => { setEditing(tour); setOpen(true); }} /></Tooltip>,
@@ -171,6 +195,7 @@ const TourPage = () => {
                     <Descriptions bordered column={1} size="middle">
                         <Descriptions.Item label="Mã tour">{viewing.code}</Descriptions.Item>
                         <Descriptions.Item label="Tên tour">{viewing.name}</Descriptions.Item>
+                        <Descriptions.Item label="Slug">{viewing.slug}</Descriptions.Item>
                         <Descriptions.Item label="Mô tả">{viewing.description}</Descriptions.Item>
                         <Descriptions.Item label="Giá">{formatCurrency(Number(viewing.price))}</Descriptions.Item>
                         <Descriptions.Item label="Địa điểm">{viewing.location}</Descriptions.Item>

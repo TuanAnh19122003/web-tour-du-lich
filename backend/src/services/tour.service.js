@@ -83,6 +83,27 @@ class TourService {
         return await tour.destroy({ where: { id } });
     }
 
+    static async getDestinations() {
+        const tours = await Tour.findAll({
+            attributes: ['location', 'image'],
+            where: { is_active: true }
+        });
+
+        // Lấy location duy nhất
+        const map = {};
+        tours.forEach(t => {
+            if (!map[t.location]) {
+                map[t.location] = t.image || '/default-destination.jpg';
+            }
+        });
+
+        return Object.keys(map).map(loc => ({
+            location: loc,
+            image: map[loc]
+        }));
+    }
+
+
 }
 
 module.exports = TourService;

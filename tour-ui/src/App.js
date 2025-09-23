@@ -22,6 +22,7 @@ import Profile from './pages/user/Profile';
 import BookingHistory from './pages/user/BookingHistory';
 import About from './pages/user/About';
 import Contact from './pages/user/Contact';
+import Destinations from './pages/user/Destinations';
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
           <Route path="/booking-history" element={<BookingHistory />} />
           <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} />
+          <Route path='/destinations' element={<Destinations />} />
         </Route>
 
         {/* Auth routes */}
