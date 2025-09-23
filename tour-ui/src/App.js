@@ -19,6 +19,7 @@ import ReviewPage from './pages/admin/review/ReviewPage';
 import BookingPage from './pages/admin/booking/BookingPage';
 
 import Profile from './pages/user/Profile';
+import BookingHistory from './pages/user/BookingHistory';
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         <Route element={<UserLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/booking-history" element={<BookingHistory />} />
         </Route>
 
         {/* Auth routes */}
