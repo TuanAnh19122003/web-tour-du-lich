@@ -18,6 +18,8 @@ import TourPage from './pages/admin/tour/TourPage';
 import ReviewPage from './pages/admin/review/ReviewPage';
 import BookingPage from './pages/admin/booking/BookingPage';
 
+import Profile from './pages/user/Profile';
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -25,6 +27,7 @@ const App = () => {
         {/* User routes */}
         <Route element={<UserLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
 
         {/* Auth routes */}
