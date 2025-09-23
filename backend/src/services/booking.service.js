@@ -9,7 +9,16 @@ class BookingService {
         return await Booking.findAndCountAll({
             distinct: true,
             include: [
-                { model: BookingItem, as: 'items', include: [{ model: Tour, as: 'tour' }] }
+                {
+                    model: BookingItem,
+                    as: 'items',
+                    include: [{ model: Tour, as: 'tour' }]
+                },
+                {
+                    model: require('../models/user.model'),
+                    as: 'user',
+                    attributes: ['id', 'lastname', 'firstname', 'email']
+                }
             ],
             offset,
             limit,
@@ -23,6 +32,30 @@ class BookingService {
             include: [{ model: BookingItem, as: 'items', include: [{ model: Tour, as: 'tour' }] }],
             order: [['createdAt', 'DESC']]
         });
+    }
+
+    static async update(bookingId, updateData) {
+        const booking = await Booking.findByPk(bookingId);
+        if (!booking) throw new Error('Booking not found');
+
+        const allowedFields = [
+            'userId',
+            'total_price',
+            'booking_date',
+            'status',
+            'paymentMethod',
+            'paypal_order_id',
+            'note'
+        ];
+
+        for (let key of allowedFields) {
+            if (updateData[key] !== undefined) {
+                booking[key] = updateData[key];
+            }
+        }
+
+        await booking.save();
+        return booking;
     }
 
     static async create({ userId, items, total_price, note, paymentMethod = 'cod' }) {

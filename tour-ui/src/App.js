@@ -16,6 +16,7 @@ import DiscountPage from './pages/admin/discount/DiscountPage';
 import ContactPage from './pages/admin/contact/ContactPage';
 import TourPage from './pages/admin/tour/TourPage';
 import ReviewPage from './pages/admin/review/ReviewPage';
+import BookingPage from './pages/admin/booking/BookingPage';
 
 const App = () => {
   return (
@@ -41,6 +42,7 @@ const App = () => {
           <Route path="/admin/contacts" element={<ContactPage />} />
           <Route path="/admin/tours" element={<TourPage />} />
           <Route path='/admin/reviews' element={<ReviewPage />}/>
+          <Route path='/admin/bookings' element={<BookingPage />}/>
         </Route>
       </Routes>
 

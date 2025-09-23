@@ -45,6 +45,21 @@ class BookingController {
         }
     }
 
+    async update(req, res) {
+        try {
+            const bookingId = req.params.id;
+            const updated = await BookingService.update(bookingId, req.body);
+            res.status(200).json({
+                success: true,
+                message: 'Cập nhật thành công',
+                data: updated
+            });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message });
+        }
+    }
+
+
     async detail(req, res) {
         try {
             const data = await BookingService.detail(req.params.id);
