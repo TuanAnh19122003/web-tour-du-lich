@@ -20,6 +20,8 @@ import BookingPage from './pages/admin/booking/BookingPage';
 
 import Profile from './pages/user/Profile';
 import BookingHistory from './pages/user/BookingHistory';
+import About from './pages/user/About';
+import Contact from './pages/user/Contact';
 
 const App = () => {
   return (
@@ -30,6 +32,8 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/booking-history" element={<BookingHistory />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/contact' element={<Contact />} />
         </Route>
 
         {/* Auth routes */}
@@ -46,8 +50,8 @@ const App = () => {
           <Route path="/admin/discounts" element={<DiscountPage />} />
           <Route path="/admin/contacts" element={<ContactPage />} />
           <Route path="/admin/tours" element={<TourPage />} />
-          <Route path='/admin/reviews' element={<ReviewPage />}/>
-          <Route path='/admin/bookings' element={<BookingPage />}/>
+          <Route path='/admin/reviews' element={<ReviewPage />} />
+          <Route path='/admin/bookings' element={<BookingPage />} />
         </Route>
       </Routes>
 
