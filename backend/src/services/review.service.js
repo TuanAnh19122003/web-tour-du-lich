@@ -59,6 +59,22 @@ class ReviewService {
         if (!review) throw new Error('Review not found');
         return review;
     }
+
+    static async findByTour(tourId) {
+        const reviews = await Review.findAll({
+            where: { tourId },
+            include: [
+                {
+                    model: require('../models/user.model'),
+                    as: 'user',
+                    attributes: ['id', 'lastname', 'firstname', 'email']
+                }
+            ],
+            order: [['createdAt', 'DESC']]
+        });
+        return reviews;
+    }
+
 }
 
 module.exports = ReviewService;

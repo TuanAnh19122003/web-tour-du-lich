@@ -111,6 +111,26 @@ class ReviewController {
             });
         }
     }
+
+    async findByTour(req, res) {
+        try {
+            const { tourId } = req.params;
+            const data = await ReviewService.findByTour(tourId);
+            return res.status(200).json({
+                success: true,
+                message: 'Lấy danh sách review theo tour thành công',
+                data
+            });
+        } catch (error) {
+            console.error('Lỗi:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Lỗi khi lấy review theo tour',
+                error: error.message
+            });
+        }
+    }
+
 }
 
 module.exports = new ReviewController();

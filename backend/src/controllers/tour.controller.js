@@ -138,7 +138,20 @@ class TourController {
         }
     }
 
+    async getTourBySlug(req, res) {
+        try {
+            const { slug } = req.params;
+            const tour = await TourService.findBySlug(slug);
 
+            if (!tour) {
+                return res.status(404).json({ success: false, message: 'Tour not found' });
+            }
+
+            res.status(200).json({ success: true, data: tour });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message });
+        }
+    }
 }
 
 module.exports = new TourController();

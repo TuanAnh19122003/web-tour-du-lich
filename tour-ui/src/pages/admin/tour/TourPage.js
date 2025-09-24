@@ -190,22 +190,76 @@ const TourPage = () => {
             </Modal>
 
             {/* Modal chi tiết */}
-            <Modal open={!!viewing} onCancel={() => setViewing(null)} footer={null} centered title="Chi tiết tour">
+            <Modal
+                open={!!viewing}
+                onCancel={() => setViewing(null)}
+                footer={null}
+                centered
+                width={800}
+                title="Chi tiết tour"
+            >
                 {viewing && (
-                    <Descriptions bordered column={1} size="middle">
-                        <Descriptions.Item label="Mã tour">{viewing.code}</Descriptions.Item>
-                        <Descriptions.Item label="Tên tour">{viewing.name}</Descriptions.Item>
-                        <Descriptions.Item label="Slug">{viewing.slug}</Descriptions.Item>
-                        <Descriptions.Item label="Mô tả">{viewing.description}</Descriptions.Item>
-                        <Descriptions.Item label="Giá">{formatCurrency(Number(viewing.price))}</Descriptions.Item>
-                        <Descriptions.Item label="Địa điểm">{viewing.location}</Descriptions.Item>
-                        <Descriptions.Item label="Ngày bắt đầu">{formatDate(viewing.start_date)}</Descriptions.Item>
-                        <Descriptions.Item label="Ngày kết thúc">{formatDate(viewing.end_date)}</Descriptions.Item>
-                        <Descriptions.Item label="Trạng thái">{viewing.is_active ? "Hoạt động" : "Ngừng"}</Descriptions.Item>
-                        <Descriptions.Item label="Nổi bật">{viewing.is_featured ? "Có" : "Không"}</Descriptions.Item>
-                    </Descriptions>
+                    <>
+                        {/* Ảnh tour */}
+                        {viewing.image && (
+                            <div style={{ textAlign: "center", marginBottom: 20 }}>
+                                <img
+                                    src={`http://localhost:5000/${viewing.image}`}
+                                    alt={viewing.name}
+                                    style={{ maxHeight: 300, borderRadius: 8, objectFit: "cover" }}
+                                />
+                            </div>
+                        )}
+
+                        <Descriptions bordered column={2} size="middle">
+                            <Descriptions.Item label="Mã tour">{viewing.code}</Descriptions.Item>
+                            <Descriptions.Item label="Tên tour">{viewing.name}</Descriptions.Item>
+                            <Descriptions.Item label="Slug">{viewing.slug}</Descriptions.Item>
+                            <Descriptions.Item label="Địa điểm">{viewing.location}</Descriptions.Item>
+
+                            <Descriptions.Item label="Giá" span={2}>
+                                {formatCurrency(Number(viewing.price))}
+                                {viewing.discount && (
+                                    <span style={{ marginLeft: 8, color: "red" }}>
+                                        -{viewing.discount.percentage}%
+                                    </span>
+                                )}
+                            </Descriptions.Item>
+
+                            <Descriptions.Item label="Số lượng tối đa">{viewing.max_people}</Descriptions.Item>
+                            <Descriptions.Item label="Còn trống">
+                                {viewing.available_people} / {viewing.max_people}
+                            </Descriptions.Item>
+
+                            <Descriptions.Item label="Ngày bắt đầu">
+                                {formatDate(viewing.start_date)}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Ngày kết thúc">
+                                {formatDate(viewing.end_date)}
+                            </Descriptions.Item>
+
+                            <Descriptions.Item label="Trạng thái">
+                                {viewing.is_active ? "Hoạt động" : "Ngừng"}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Nổi bật">
+                                {viewing.is_featured ? "Có" : "Không"}
+                            </Descriptions.Item>
+
+                            <Descriptions.Item label="Mô tả" span={2}>
+                                {viewing.description}
+                            </Descriptions.Item>
+
+                            {/* Nếu bạn có rating */}
+                            {viewing.avgRating && (
+                                <Descriptions.Item label="Đánh giá trung bình" span={2}>
+                                    ⭐ {viewing.avgRating.toFixed(1)} / 5 ({viewing.reviewCount} đánh giá)
+                                </Descriptions.Item>
+                            )}
+                        </Descriptions>
+                    </>
                 )}
             </Modal>
+
         </div>
     );
 };

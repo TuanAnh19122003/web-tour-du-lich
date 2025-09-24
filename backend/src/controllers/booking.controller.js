@@ -24,14 +24,20 @@ class BookingController {
     async createBooking(req, res) {
         try {
             const { booking, approveUrl } = await BookingService.create(req.body);
+
             res.status(201).json({
                 success: true,
                 message: 'Booking created successfully',
                 data: booking,
                 ...(approveUrl && { approveUrl })
             });
+
         } catch (err) {
-            res.status(500).json({ success: false, message: err.message });
+            console.error("Booking creation error:", err);
+            res.status(500).json({
+                success: false,
+                message: err.message
+            });
         }
     }
 

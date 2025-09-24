@@ -1,6 +1,8 @@
+const Booking = require('../models/booking.model');
+const BookingItem = require('../models/bookingItem.model');
+const Tour = require('../models/tour.model');
 const { client: paypalClient } = require('../config/paypal');
 const checkoutNodeJssdk = require('@paypal/checkout-server-sdk');
-const Booking = require('../models/booking.model');
 
 /**
  * Helper: convert cart items sang PayPal format
@@ -76,38 +78,48 @@ const create = async (req, res) => {
  * Capture PayPal order cho booking
  */
 const capture = async (req, res) => {
+    const t = await Booking.sequelize.transaction();
     try {
         const { bookingId } = req.body;
-        if (!bookingId) {
-            return res.status(400).json({ success: false, message: "bookingId is required" });
-        }
+        if (!bookingId) throw new Error("bookingId is required");
 
-        const booking = await Booking.findByPk(bookingId);
-        if (!booking || !booking.paypal_order_id) {
-            return res.status(404).json({ success: false, message: "Booking not found or not paid via PayPal" });
-        }
+        // Lấy booking + items, lock để tránh race condition
+        const booking = await Booking.findByPk(bookingId, {
+            include: [{ model: BookingItem, as: 'items' }],
+            transaction: t,
+            lock: t.LOCK.UPDATE
+        });
+        if (!booking) throw new Error("Booking not found");
+        if (!booking.paypal_order_id) throw new Error("Booking chưa thanh toán PayPal");
 
+        // Capture PayPal
         const request = new checkoutNodeJssdk.orders.OrdersCaptureRequest(booking.paypal_order_id);
         request.requestBody({});
-        const captureResult = await paypalClient().execute(request);
+        await paypalClient().execute(request);
 
-        booking.status = "paid";
-        await booking.save();
+        // Chỉ trừ vé nếu chưa trừ lần nào
+        if (!booking.tickets_reduced) {
+            for (const item of booking.items) {
+                const tour = await Tour.findByPk(item.tourId, { transaction: t, lock: t.LOCK.UPDATE });
+                if (!tour) continue;
+                if (tour.available_people < item.quantity) throw new Error(`Tour ${tour.name} không đủ số lượng vé`);
+                tour.available_people -= item.quantity;
+                await tour.save({ transaction: t });
+            }
 
-        res.status(200).json({
-            success: true,
-            message: "PayPal payment captured successfully for booking",
-            data: booking,
-            paypal: captureResult.result
-        });
+            // Đánh dấu đã trừ vé và cập nhật trạng thái paid
+            booking.tickets_reduced = true;
+            booking.status = 'paid';
+            await booking.save({ transaction: t });
+        }
+
+        await t.commit();
+        res.status(200).json({ success: true, message: "Payment captured & tickets updated", data: booking });
 
     } catch (err) {
-        console.error("Error capturing PayPal payment for booking:", err);
-        res.status(500).json({
-            success: false,
-            message: "Failed to capture PayPal payment for booking",
-            error: err.message
-        });
+        await t.rollback();
+        console.error("PayPal capture error:", err);
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 

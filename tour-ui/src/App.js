@@ -23,6 +23,9 @@ import BookingHistory from './pages/user/BookingHistory';
 import About from './pages/user/About';
 import Contact from './pages/user/Contact';
 import Destinations from './pages/user/Destinations';
+import TourDetail from './pages/user/TourDetail';
+import BookingSuccess from './pages/user/BookingSuccess';
+import BookingCancel from './pages/user/BookingCancel';
 
 const App = () => {
   return (
@@ -36,6 +39,9 @@ const App = () => {
           <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} />
           <Route path='/destinations' element={<Destinations />} />
+          <Route path="/tours/:slug" element={<TourDetail />} />
+          <Route path="/bookings/paypal-success" element={<BookingSuccess />} />
+          <Route path="/bookings/paypal-cancel" element={<BookingCancel />} />
         </Route>
 
         {/* Auth routes */}

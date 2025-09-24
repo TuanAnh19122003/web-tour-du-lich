@@ -81,7 +81,7 @@ class TourService {
 
         return await tour.destroy({ where: { id } });
     }
-    
+
     static async getDestinations() {
         const tours = await Tour.findAll({
             attributes: ['location', 'image'],
@@ -111,6 +111,18 @@ class TourService {
             },
             order: [['createdAt', 'DESC']],
             limit: 6
+        });
+    }
+
+    static async findBySlug(slug) {
+        return await Tour.findOne({
+            where: { slug },
+            include: [
+                {
+                    model: Discount,
+                    as: 'discount',
+                }
+            ]
         });
     }
 }

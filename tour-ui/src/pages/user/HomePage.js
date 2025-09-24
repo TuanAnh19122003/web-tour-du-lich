@@ -11,6 +11,8 @@ import {
     Avatar,
     Rate,
 } from "antd";
+import { useNavigate } from "react-router-dom";
+import { formatCurrency } from '../../utils/helpers';
 
 const { Title, Paragraph } = Typography;
 
@@ -18,6 +20,7 @@ const HomePage = () => {
     const [featuredTours, setFeaturedTours] = useState([]);
     const [destinations, setDestinations] = useState([]);
     const [reviews, setReviews] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get("http://localhost:5000/api/tours/featured")
@@ -83,14 +86,27 @@ const HomePage = () => {
                                             style={{ height: "220px", objectFit: "cover" }}
                                         />
                                     }
+                                    onClick={() => navigate(`/tours/${tour.slug}`)}
                                 >
                                     <Card.Meta
                                         title={tour.name}
                                         description={tour.location}
                                     />
-                                    <Paragraph strong style={{ marginTop: "10px", color: "#1677ff" }}>
-                                        {tour.price} đ
-                                    </Paragraph>
+                                    {tour.discount ? (
+                                        <div>
+                                            <Paragraph delete style={{ marginBottom: 0 }}>
+                                                {formatCurrency(Number(tour.price))}
+                                            </Paragraph>
+                                            <Paragraph strong style={{ marginTop: "4px", color: "#1677ff" }}>
+                                                {formatCurrency(Number(tour.price * (1 - tour.discount.percentage / 100)))}
+                                            </Paragraph>
+                                        </div>
+                                    ) : (
+                                        <Paragraph strong style={{ marginTop: "10px", color: "#1677ff" }}>
+                                            {formatCurrency(Number(tour.price))}
+                                        </Paragraph>
+                                    )}
+
                                 </Card>
                             </Badge.Ribbon>
                         </Col>
