@@ -1,4 +1,8 @@
+const fs = require('fs');
+const path = require('path');
+const { Op } = require('sequelize');
 const Tour = require('../models/tour.model');
+const Discount = require('../models/discount.model');
 
 class TourService {
     static async findAll(options = {}) {
@@ -6,31 +10,26 @@ class TourService {
 
         const whereClause = {};
         if (search) {
-            const { Op } = require('sequelize');
             whereClause[Op.or] = [
-                { id: { [Op.like]: `%${search}%` } },
-                { lastname: { [Op.like]: `%${search}%` } },
-                { firstname: { [Op.like]: `%${search}%` } },
-                { email: { [Op.like]: `%${search}%` } },
-                { phone: { [Op.like]: `%${search}%` } },
-                { is_active: { [Op.like]: `%${search}%` } },
+                { code: { [Op.like]: `%${search}%` } },
+                { name: { [Op.like]: `%${search}%` } },
+                { slug: { [Op.like]: `%${search}%` } },
+                { location: { [Op.like]: `%${search}%` } },
+                { description: { [Op.like]: `%${search}%` } },
             ];
         }
 
-        const queryOptions = {
+        return await Tour.findAndCountAll({
             where: whereClause,
             include: {
-                model: require('../models/discount.model'),
+                model: Discount,
                 as: 'discount',
-                attributes: ['id', 'name']
+                attributes: ['id', 'name', 'percentage']
             },
             offset,
             limit,
-            order: [['createdAt', 'ASC']]
-        };
-
-        const tours = await Tour.findAndCountAll(queryOptions);
-        return tours;
+            order: [['createdAt', 'DESC']]
+        });
     }
 
     static async create(data, file) {
@@ -82,14 +81,13 @@ class TourService {
 
         return await tour.destroy({ where: { id } });
     }
-
+    
     static async getDestinations() {
         const tours = await Tour.findAll({
             attributes: ['location', 'image'],
             where: { is_active: true }
         });
 
-        // Lấy location duy nhất
         const map = {};
         tours.forEach(t => {
             if (!map[t.location]) {
@@ -103,7 +101,18 @@ class TourService {
         }));
     }
 
-
+    static async getFeatured() {
+        return await Tour.findAll({
+            where: { is_active: true, is_featured: true },
+            include: {
+                model: Discount,
+                as: 'discount',
+                attributes: ['id', 'name', 'percentage']
+            },
+            order: [['createdAt', 'DESC']],
+            limit: 6
+        });
+    }
 }
 
 module.exports = TourService;

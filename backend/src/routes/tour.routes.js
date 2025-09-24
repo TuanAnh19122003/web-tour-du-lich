@@ -5,6 +5,7 @@ const upload = require('../utils/multer');
 
 router.get('/', controller.findAll);
 router.get('/destinations', controller.getDestinations);
+router.get('/featured', controller.getFeatured);
 router.post('/', upload.single('image'), controller.create);
 router.put('/:id', upload.single('image'), controller.update);
 router.delete('/:id', controller.delete);

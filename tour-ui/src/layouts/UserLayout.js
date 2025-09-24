@@ -177,7 +177,6 @@ const UserLayout = () => {
                     }}
                     items={[
                         { key: "/", label: <Link to="/">Trang chủ</Link> },
-                        { key: "/tours", label: <Link to="/tours">Tour du lịch</Link> },
                         { key: "/destinations", label: <Link to="/destinations">Điểm đến</Link> },
                         { key: "/about", label: <Link to="/about">Giới thiệu</Link> },
                         { key: "/contact", label: <Link to="/contact">Liên hệ</Link> },

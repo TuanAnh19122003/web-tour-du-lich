@@ -120,6 +120,25 @@ class TourController {
         }
     }
 
+    async getFeatured(req, res) {
+        try {
+            const data = await TourService.getFeatured();
+            res.status(200).json({
+                success: true,
+                message: 'Lấy tour nổi bật thành công',
+                data
+            });
+        } catch (error) {
+            console.error('Lỗi getFeatured:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Lỗi khi lấy tour nổi bật',
+                error: error.message
+            });
+        }
+    }
+
+
 }
 
 module.exports = new TourController();
